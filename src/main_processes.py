@@ -1,5 +1,7 @@
 from src.algorithms.ddm import DDM
 from src.algorithms.eddm import EDDM
+from src.algorithms.hddma import HDDM_A
+from src.algorithms.hddmw import HDDM_W
 from src.algorithms.precision import Precision
 from src.loading.data_loader import DataLoader
 from src.plotting.plot_prec_and_drift import plot
@@ -58,6 +60,22 @@ def runEDDM():
     process(algorithms, clf, dl)
     plot(algorithms)
 
+def runHDDM_A():
+    dl = DataLoader()
+    clf_data = dl.get_predict_data()
+    clf = get_classifier(clf_data[0], clf_data[1])
+    algorithms = [Precision(), HDDM_A()]
+    process(algorithms, clf, dl)
+    plot(algorithms)
+
+def runHDDM_W():
+    dl = DataLoader()
+    clf_data = dl.get_predict_data()
+    clf = get_classifier(clf_data[0], clf_data[1])
+    algorithms = [Precision(), HDDM_W()]
+    process(algorithms, clf, dl)
+    plot(algorithms)
+
 def runVFDTwithDDM():
     dl = DataLoader()
     clf = get_classifier_vfdt()
@@ -72,8 +90,27 @@ def runVFDTwithEDDM():
     process_inc(algorithms, clf, dl)
     plot(algorithms)
 
+def runVFDTwithHDDM_A():
+    dl = DataLoader()
+    clf = get_classifier_vfdt()
+    algorithms = [Precision(), HDDM_A()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
+
+def runVFDTwithHDDM_W():
+    dl = DataLoader()
+    clf = get_classifier_vfdt()
+    algorithms = [Precision(), HDDM_W()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
+
 
 runDDM()
 runEDDM()
+runHDDM_A()
+runHDDM_W()
 runVFDTwithDDM()
 runVFDTwithEDDM()
+runVFDTwithHDDM_A()
+runVFDTwithHDDM_W()
+
