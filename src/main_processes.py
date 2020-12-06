@@ -5,7 +5,7 @@ from src.algorithms.hddmw import HDDM_W
 from src.algorithms.precision import Precision
 from src.loading.data_loader import DataLoader
 from src.plotting.plot_prec_and_drift import plot
-from src.prediction.predict import get_classifier, get_classifier_vfdt
+from src.prediction.predict import get_classifier, get_classifier_vfdt, get_classifier_bayes, get_classifier_perceptron
 
 
 def process(algorithms, clf, dl):
@@ -43,7 +43,6 @@ def process_inc(algorithms, clf, dl):
                 algorithm.add_data(0, str(one_row[2]))
 
 
-
 def runDDM():
     dl = DataLoader()
     clf_data = dl.get_predict_data()
@@ -51,6 +50,7 @@ def runDDM():
     algorithms = [Precision(), DDM()]
     process(algorithms, clf, dl)
     plot(algorithms)
+
 
 def runEDDM():
     dl = DataLoader()
@@ -60,6 +60,7 @@ def runEDDM():
     process(algorithms, clf, dl)
     plot(algorithms)
 
+
 def runHDDM_A():
     dl = DataLoader()
     clf_data = dl.get_predict_data()
@@ -67,6 +68,7 @@ def runHDDM_A():
     algorithms = [Precision(), HDDM_A()]
     process(algorithms, clf, dl)
     plot(algorithms)
+
 
 def runHDDM_W():
     dl = DataLoader()
@@ -76,12 +78,14 @@ def runHDDM_W():
     process(algorithms, clf, dl)
     plot(algorithms)
 
+
 def runVFDTwithDDM():
     dl = DataLoader()
     clf = get_classifier_vfdt()
     algorithms = [Precision(), DDM()]
     process_inc(algorithms, clf, dl)
     plot(algorithms)
+
 
 def runVFDTwithEDDM():
     dl = DataLoader()
@@ -90,12 +94,14 @@ def runVFDTwithEDDM():
     process_inc(algorithms, clf, dl)
     plot(algorithms)
 
+
 def runVFDTwithHDDM_A():
     dl = DataLoader()
     clf = get_classifier_vfdt()
     algorithms = [Precision(), HDDM_A()]
     process_inc(algorithms, clf, dl)
     plot(algorithms)
+
 
 def runVFDTwithHDDM_W():
     dl = DataLoader()
@@ -105,12 +111,58 @@ def runVFDTwithHDDM_W():
     plot(algorithms)
 
 
-runDDM()
-runEDDM()
-runHDDM_A()
-runHDDM_W()
-runVFDTwithDDM()
-runVFDTwithEDDM()
-runVFDTwithHDDM_A()
-runVFDTwithHDDM_W()
+def runBayeswithDDM():
+    dl = DataLoader()
+    clf = get_classifier_bayes()
+    algorithms = [Precision(), DDM()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
 
+
+def runBayeswithEDDM():
+    dl = DataLoader()
+    clf = get_classifier_bayes()
+    algorithms = [Precision(), EDDM()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
+
+
+def runBayeswithHDDM_A():
+    dl = DataLoader()
+    clf = get_classifier_bayes()
+    algorithms = [Precision(), HDDM_A()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
+
+
+def runBayeswithHDDM_W():
+    dl = DataLoader()
+    clf = get_classifier_bayes()
+    algorithms = [Precision(), HDDM_W()]
+    process_inc(algorithms, clf, dl)
+    plot(algorithms)
+
+
+def runClassificationWithInc(algorithm, classifier):
+    dl = DataLoader()
+    algorithms = [Precision(), algorithm]
+    process_inc(algorithms, classifier, dl)
+    plot(algorithms)
+
+
+# runDDM()
+# runEDDM()
+# runHDDM_A()
+# runHDDM_W()
+
+algorithms = [DDM(),
+              EDDM(),
+              HDDM_A(),
+              HDDM_W()]
+classifiers = [
+    get_classifier_vfdt(),
+    get_classifier_bayes()
+]
+
+for alg in algorithms:
+    runClassificationWithInc(alg, get_classifier_perceptron())

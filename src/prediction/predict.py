@@ -1,5 +1,3 @@
-
-
 def get_classifier(x, y):
     from sklearn.ensemble import RandomForestClassifier
 
@@ -12,6 +10,16 @@ def get_classifier(x, y):
 def get_classifier_vfdt():
     from skmultiflow.trees import HoeffdingTree
 
-    clf = HoeffdingTree(split_confidence=0.5)
+    return HoeffdingTree(split_confidence=0.5)
 
-    return clf
+
+def get_classifier_bayes():
+    from skmultiflow.bayes import NaiveBayes
+
+    return NaiveBayes()
+
+
+def get_classifier_perceptron():
+    from skmultiflow.neural_networks import PerceptronMask
+
+    return PerceptronMask()
