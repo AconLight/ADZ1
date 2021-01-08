@@ -1,6 +1,7 @@
 from skmultiflow.bayes import NaiveBayes
 from skmultiflow.meta import AdditiveExpertEnsembleClassifier
 from skmultiflow.trees import HoeffdingTree
+import numpy as np
 
 
 class IncrementalClassifier:
@@ -54,3 +55,46 @@ class AEEC():
 
     def predict(self, x):
         return self.clf.predict(x)
+
+class DWM():
+    def __init__(self, clfs, beta):
+        super().__init__()
+        self.clfs = clfs
+        self.weights = np.ones(len(clfs))
+        self.beta = beta
+        self.prediction = 0
+        self.predictions = []
+
+    def partial_fit(self, one_row):
+        self.dwm_clfs_fit(one_row)
+
+    def predict(self, x):
+        return self.dwm_predict(x)
+
+    def dwm_clfs_fit(self, one_row):
+        for i in range(len(self.clfs)):
+            self.clfs[i].partial_fit(one_row)
+            if self.predictions[i] != one_row[1]:
+                self.weights[i] *= self.beta
+
+    def dwm_predict(self, x):
+        self.predictions = []
+        for clf in self.clfs:
+            self.predictions.append(clf.predict(x))
+
+        self.prediction = 0
+        sum_weights = 0
+        for w in self.weights:
+            sum_weights += w
+
+        for i in range(len(self.predictions)):
+            self.prediction += self.predictions[i]*self.weights[i]
+
+        self.prediction /= sum_weights
+        if self.prediction > 0.5:
+            self.prediction = 1
+        else:
+            self.prediction = 0
+
+        return [self.prediction]
+

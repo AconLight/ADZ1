@@ -5,7 +5,7 @@ from src.algorithms.hddmw import HDDM_W
 from src.algorithms.precision import Precision
 from src.loading.data_loader import DataLoader
 from src.plotting.plot_prec_and_drift import plot
-from src.prediction.inc_predict import VFDT, Bayes, AEEC
+from src.prediction.inc_predict import VFDT, Bayes, AEEC, DWM
 from src.prediction.predict import get_classifier
 
 
@@ -92,6 +92,12 @@ def run_classification_with_inc(algorithm, classifier):
     process_inc(algorithms, classifier, dl)
     plot(algorithms)
 
+def run_classification_with_all(algorithm, classifiers):
+    dl = DataLoader()
+    algorithms = [Precision(), algorithm]
+    process_inc(algorithms, classifier, dl)
+    plot(algorithms)
+
 
 # runDDM()
 # runEDDM()
@@ -107,21 +113,23 @@ algorithms = [
 
 # INCREMENTATION
 classifiers_inc = [
-    # VFDT(split_criterion='gini'),
-    # VFDT(split_criterion='hellinger'),
-    # VFDT(split_criterion='gini'),
-    # VFDT(leaf_prediction='nba'),
-    # VFDT(leaf_prediction='nb'),
-    # VFDT(leaf_prediction='mc'),
-    # VFDT(grace_period=100),
-    # VFDT(grace_period=200),
-    # Bayes(), #no arguments
-    # AEEC(pruning='oldest'),
-    # AEEC(pruning='weakest'),
-    # AEEC(beta=0.8),
-    # AEEC(beta=0.9),
-    # AEEC(gamma=0.1),
-    # AEEC(gamma=0.2)
+    DWM([
+        VFDT(split_criterion='gini'),
+        VFDT(split_criterion='hellinger'),
+        VFDT(split_criterion='gini'),
+        VFDT(leaf_prediction='nba'),
+        VFDT(leaf_prediction='nb'),
+        VFDT(leaf_prediction='mc'),
+        VFDT(grace_period=100),
+        VFDT(grace_period=200),
+        Bayes(), #no arguments
+        AEEC(pruning='oldest'),
+        AEEC(pruning='weakest'),
+        AEEC(beta=0.8),
+        AEEC(beta=0.9),
+        AEEC(gamma=0.1),
+        AEEC(gamma=0.2)
+    ], 0.9)
 ]
 
 for clf in classifiers_inc:
